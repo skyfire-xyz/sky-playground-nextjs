@@ -16,7 +16,7 @@
     "@types/lodash": "^4.17.7",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "axios-retry": "^4.1.0",
     "event-source-polyfill": "^1.0.31",
     "eventsource-parser": "^2.0.1",
