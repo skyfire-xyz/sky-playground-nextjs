@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "@/src/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Flowbite, ThemeModeScript } from "flowbite-react";
-import theme from "@/src/flowbite-theme";
+import theme from "@/src/lib/flowbite-theme";
 import { ToastContainer } from "react-toastify";
-import { Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Instrument_Sans } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Skyfire Dashboard",
