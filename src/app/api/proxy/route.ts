@@ -44,8 +44,6 @@ export async function POST(request: Request) {
     return Response.json({ message: "Internal Server Error" }, { status: 500 });
   }
 
-  console.log(res, "res");
-
   if (!res)
     return Response.json({ message: "Internal Server Error" }, { status: 500 });
 
