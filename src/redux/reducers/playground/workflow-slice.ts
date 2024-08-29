@@ -91,16 +91,21 @@ export const workflowStateSelector = (state: any) => {
 function processPending(state: WorkflowSliceReduxState) {
   state.status.requesting = true;
 }
-function processError(
-  state: WorkflowSliceReduxState,
-  action: PayloadAction<any>,
-) {
+function processError(state: WorkflowSliceReduxState, action: any) {
   state.status.requesting = false;
-  state.messages.push({
-    type: "error",
-    textMessage:
-      "Sorry, something went wrong when interacting with the AI. Please try again.",
-  });
+  if (action.error?.message?.includes("401")) {
+    state.messages.push({
+      type: "error",
+      textMessage:
+        "Looks like your request is missing an API key. Please configure environment variables.",
+    });
+  } else {
+    state.messages.push({
+      type: "error",
+      textMessage:
+        "Sorry, something went wrong when interacting with the AI. Please try again.",
+    });
+  }
 }
 function processFulfilled(
   state: WorkflowSliceReduxState,

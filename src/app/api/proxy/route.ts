@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const { messages, model } = req;
 
   if (!process.env.SKYFIRE_API_KEY) {
-    return Response.json({ message: "Missing API Key" }, { status: 400 });
+    return Response.json({ message: "Missing API Key" }, { status: 401 });
   }
 
   const client = new SkyfireClient({

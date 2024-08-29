@@ -2,7 +2,7 @@ import { SkyfireClient } from "@skyfire-xyz/skyfire-sdk";
 
 export async function GET(request: Request) {
   if (!process.env.SKYFIRE_API_KEY) {
-    return Response.json({ message: "Missing API Key" }, { status: 400 });
+    return Response.json({ message: "Missing API Key" }, { status: 401 });
   }
 
   const client = new SkyfireClient({

@@ -95,13 +95,21 @@ export const chatStateSelector = (state: any) => {
 function processPending(state: ChatSliceReduxState) {
   state.status.requesting = true;
 }
-function processError(state: ChatSliceReduxState, action: PayloadAction<any>) {
+function processError(state: ChatSliceReduxState, action: any) {
   state.status.requesting = false;
-  state.messages.push({
-    type: "error",
-    textMessage:
-      "Sorry, something went wrong when interacting with the AI. Please try again.",
-  });
+  if (action.error?.message?.includes("401")) {
+    state.messages.push({
+      type: "error",
+      textMessage:
+        "Looks like your request is missing an API key. Please configure environment variables.",
+    });
+  } else {
+    state.messages.push({
+      type: "error",
+      textMessage:
+        "Sorry, something went wrong when interacting with the AI. Please try again.",
+    });
+  }
 }
 function processFulfilled(state: ChatSliceReduxState, action: PayloadAction) {
   state.status.requesting = false;
