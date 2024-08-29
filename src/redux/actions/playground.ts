@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { APICallConfig, ModelTemplate } from "@/src/config/models";
+import { RootState } from "../store";
 
 interface PostChatProps {
   chatType: string;
@@ -28,18 +29,13 @@ async function callProxyAPI(props: PostChatProps) {
     messages: messagesWithData,
   });
 
-  // Request payments
-  // TODO: Handle to get payment information.
-  // const referenceId = res.data.headers["skyfire-payment-reference-id"];
-  // const payment = await getClaimByReferenceID(referenceId);
-
   return {
     ...res.data,
-    // payment,
     prompt: message,
     type: chatType,
   };
 }
+
 export const postChat = createAsyncThunk<any, PostChatProps>(
   "playground/postChat",
   callProxyAPI,
@@ -48,4 +44,29 @@ export const postChat = createAsyncThunk<any, PostChatProps>(
 export const postWorkflow = createAsyncThunk<any, PostChatProps>(
   "playground/postWorkflow",
   callProxyAPI,
+);
+
+export const getWalletBalance = createAsyncThunk<any>(
+  "playground/getWalletBalance",
+  async () => {
+    const res = await axios.get(`/api/balance`);
+    return res.data;
+  },
+  {
+    condition: (_, { getState }) => {
+      const { wallet } = getState() as RootState;
+      const fetchStatus = wallet.status;
+      if (fetchStatus === "fulfilled" || fetchStatus === "pending") {
+        return false;
+      }
+    },
+  },
+);
+
+export const refetchBalance = createAsyncThunk<any>(
+  "playground/getWalletBalance",
+  async () => {
+    const res = await axios.get(`/api/balance`);
+    return res.data;
+  },
 );

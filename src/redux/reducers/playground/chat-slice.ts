@@ -78,7 +78,7 @@ export const chatSlice = createSlice({
             model: action.meta.arg.model,
             data: data,
             textMessage: textMessages[0].message.content,
-            payment: action.payload.payment,
+            payment: action.payload.data.payment,
           });
         }
 
