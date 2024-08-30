@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
   let res;
   try {
-    res = await client.account.wallet.walletBalance();
+    res = await client.account.wallet.getWalletBalanceForUser();
   } catch (err) {
     if (err instanceof Error) {
       const error = err as any;

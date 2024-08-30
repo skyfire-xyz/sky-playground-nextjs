@@ -3,6 +3,7 @@ import Markdown from "react-markdown";
 import ModelIcons from "../../common/model-icons";
 import BouncingDotsLoader from "../../common/bouncing-loader";
 import { usdAmount } from "@/src/lib/utils";
+import type { Claim } from "@skyfire-xyz/skyfire-sdk";
 
 interface ChatGeneralProps {
   direction: "left" | "right";
@@ -11,7 +12,7 @@ interface ChatGeneralProps {
   children?: React.ReactNode;
   type?: string;
   model?: string;
-  payment?: any;
+  payment?: Claim;
   isProcessing: boolean;
 }
 
@@ -61,7 +62,7 @@ function ChatGeneral({
               <b>{model}</b>
             </p>
             <p className="flex items-center gap-1 text-green-500">
-              Spent: <b>{usdAmount(payment?.amount)}</b>
+              Spent: <b>{usdAmount(payment?.value)}</b>
             </p>
           </div>
         )}

@@ -858,10 +858,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@skyfire-xyz/skyfire-sdk@^0.6.0-dev.2":
-  version "0.6.0-dev.2"
-  resolved "https://registry.yarnpkg.com/@skyfire-xyz/skyfire-sdk/-/skyfire-sdk-0.6.0-dev.2.tgz#c8f49b8c2fbdd5875a76cf1500e18c6056bd9cf1"
-  integrity sha512-UUcL95fbp6WQSnpn2by6T1PIQQmKFVFXLIf6Ku2ort2kQWx5i/SOgs5bCEGCBaLABYPDetqaquF8vEULqJVqmg==
+"@skyfire-xyz/skyfire-sdk@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@skyfire-xyz/skyfire-sdk/-/skyfire-sdk-0.6.0.tgz#9f224834b14ba28888bb98ac3fbce4fe53f1c4b1"
+  integrity sha512-7v3dLTYNfjYA+Wk5A/yFrZm/C3vsOpeAGWxUMsbYi0EA9kYWLey87hPDbeGYMfRj/eOpnBBwlToBAXiztC4SKg==
   dependencies:
     "@types/node" "*"
     "@types/node-fetch" "^2.5.7"

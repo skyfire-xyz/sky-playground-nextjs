@@ -1,5 +1,3 @@
-export type ENV_TYPES = "production" | "development" | "sandbox";
-
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
