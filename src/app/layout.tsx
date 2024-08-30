@@ -5,6 +5,7 @@ import { Flowbite, ThemeModeScript } from "flowbite-react";
 import theme from "@/src/lib/flowbite-theme";
 import { ToastContainer } from "react-toastify";
 import { Instrument_Sans } from "next/font/google";
+import ReduxProvider from "./provider";
 
 export const metadata: Metadata = {
   title: "Skyfire Dashboard",
@@ -31,8 +32,10 @@ export default function RootLayout({
       </head>
       <body className={`${instrument.variable} bg-body font-instrument`}>
         <Flowbite theme={{ theme }}>
-          {children}
-          <ToastContainer position="bottom-right" autoClose={6000} />
+          <ReduxProvider>
+            {children}
+            <ToastContainer position="bottom-right" autoClose={6000} />
+          </ReduxProvider>
         </Flowbite>
       </body>
     </html>
