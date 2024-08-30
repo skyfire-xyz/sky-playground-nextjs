@@ -89,7 +89,15 @@ function processPending(state: WorkflowSliceReduxState) {
 }
 function processError(state: WorkflowSliceReduxState, action: any) {
   state.status.requesting = false;
-  if (action.error?.message?.includes("401")) {
+
+  // Handle error messages
+  if (action.payload.data.message === "Insufficient Minimum Balance") {
+    state.messages.push({
+      type: "error",
+      textMessage:
+        "Looks like you don't have enough balance to complete this transaction. Please top up your account.",
+    });
+  } else if (action.payload.data.message === "Invalid API Key") {
     state.messages.push({
       type: "error",
       textMessage:
@@ -103,10 +111,7 @@ function processError(state: WorkflowSliceReduxState, action: any) {
     });
   }
 }
-function processFulfilled(
-  state: WorkflowSliceReduxState,
-  action: PayloadAction,
-) {
+function processFulfilled(state: WorkflowSliceReduxState) {
   state.status.requesting = false;
 }
 
