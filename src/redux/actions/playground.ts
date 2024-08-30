@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { APICallConfig, ModelTemplate } from "@/src/config/models";
 import { RootState } from "../store";
+import { createAsyncThunkWithReject } from "../utils/async-thunk-withreject";
 
 interface PostChatProps {
   chatType: string;
@@ -36,12 +37,12 @@ async function callProxyAPI(props: PostChatProps) {
   };
 }
 
-export const postChat = createAsyncThunk<any, PostChatProps>(
+export const postChat = createAsyncThunkWithReject<any, PostChatProps>(
   "playground/postChat",
   callProxyAPI,
 );
 
-export const postWorkflow = createAsyncThunk<any, PostChatProps>(
+export const postWorkflow = createAsyncThunkWithReject<any, PostChatProps>(
   "playground/postWorkflow",
   callProxyAPI,
 );
@@ -63,7 +64,7 @@ export const getWalletBalance = createAsyncThunk<any>(
   },
 );
 
-export const refetchBalance = createAsyncThunk<any>(
+export const refetchBalance = createAsyncThunkWithReject<any>(
   "playground/getWalletBalance",
   async () => {
     const res = await axios.get(`/api/balance`);

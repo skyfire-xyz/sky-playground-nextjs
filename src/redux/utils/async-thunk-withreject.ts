@@ -19,7 +19,7 @@ export const createAsyncThunkWithReject = <Returned, ThunkArg = void>(
         if (!error.response) {
           throw err;
         }
-        return thunkAPI.rejectWithValue(error.response.data);
+        return thunkAPI.rejectWithValue(error.response);
       }
     },
   );

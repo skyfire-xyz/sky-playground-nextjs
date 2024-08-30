@@ -73,7 +73,6 @@ export const workflowSlice = createSlice({
             payment: action.payload.data.payment,
           });
         }
-
         processFulfilled(state, action);
       })
       .addCase(postWorkflow.rejected, processError);
@@ -89,7 +88,15 @@ function processPending(state: WorkflowSliceReduxState) {
 }
 function processError(state: WorkflowSliceReduxState, action: any) {
   state.status.requesting = false;
-  if (action.error?.message?.includes("401")) {
+
+  // Handle error messages
+  if (action.payload.data.message === "Insufficient Minimum Balance") {
+    state.messages.push({
+      type: "error",
+      textMessage:
+        "Looks like you don't have enough balance to complete this transaction. Please top up your account.",
+    });
+  } else if (action.payload.data.message === "Invalid API Key") {
     state.messages.push({
       type: "error",
       textMessage:
