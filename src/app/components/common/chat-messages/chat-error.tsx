@@ -1,9 +1,8 @@
 import Markdown from "react-markdown";
 import ModelIcons from "../../common/model-icons";
+import { ChatMessageType } from "@/src/redux/reducers/playground/types";
 
-interface ChatGeneralProps {
-  direction: "left" | "right";
-  textMessage?: string;
+interface ChatGeneralProps extends ChatMessageType {
   contentImageUrl?: string;
   children?: React.ReactNode;
 }

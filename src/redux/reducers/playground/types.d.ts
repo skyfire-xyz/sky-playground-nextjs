@@ -1,15 +1,25 @@
-// ChatSlice
-export interface Task {
-  id: number;
-  skill: string;
-  status: "complete" | "pending" | "error";
-  result: any;
-  dependent_task_ids: number[];
-  parentId: number;
-  referenceId: number;
-  objective: string;
-  isDependentTasksComplete?: boolean;
-}
+// // ChatSlice
+// export interface Task {
+//   id: number;
+//   skill: string;
+//   status: "complete" | "pending" | "error";
+//   result: any;
+//   dependent_task_ids: number[];
+//   parentId: number;
+//   referenceId: number;
+//   objective: string;
+//   isDependentTasksComplete?: boolean;
+// }
+
+import type { Claim } from "@skyfire-xyz/skyfire-sdk";
+
+export type ChatMessageType = {
+  type: "chat" | "error";
+  textMessage: string;
+  direction?: "left" | "right" | undefined;
+  model?: string;
+  payment?: Claim | null;
+};
 
 export interface WorkflowSliceReduxState {
   messages: ChatMessageType[];
@@ -28,66 +38,66 @@ export interface ChatSliceReduxState {
   selectedModel: Model;
 }
 
-export type ChatMessageType = {
-  uuid?: string;
-  type:
-    | "chat"
-    | "error"
-    | "dataset_search"
-    | "tasklist"
-    | "web_search"
-    | "video_search"
-    | "text_completion"
-    | "image_generation"
-    | "meme"
-    | "random_joke"
-    | "dataset_download";
-  direction?: "left" | "right";
-  textMessage: string;
-  data?: any;
-  contentImageUrl?: string;
-  payment?: {
-    amount: string | number;
-    referenceId: string;
-  };
-  model?: string;
-  inProgress?: boolean;
-};
+// export type ChatMessageType = {
+//   uuid?: string;
+//   type:
+//     | "chat"
+//     | "error"
+//     | "dataset_search"
+//     | "tasklist"
+//     | "web_search"
+//     | "video_search"
+//     | "text_completion"
+//     | "image_generation"
+//     | "meme"
+//     | "random_joke"
+//     | "dataset_download";
+//   direction?: "left" | "right";
+//   textMessage: string;
+//   data?: any;
+//   contentImageUrl?: string;
+//   payment?: {
+//     amount: string | number;
+//     referenceId: string;
+//   };
+//   model?: string;
+//   inProgress?: boolean;
+// };
 
-// ProtocolLogs
-export type PaymentType = {
-  userUuid: string;
-  status: "SUCCESS" | "DENIED";
-  network: string;
-  currency: string;
-  destinationAddress: string;
-  destinationName: string;
-  generatedDate: string;
-  sourceAddress: string;
-  sourceName: string;
-  amount: string;
-  message: string;
-};
+// // ProtocolLogs
+// export type PaymentType = {
+//   userUuid: string;
+//   status: "SUCCESS" | "DENIED";
+//   network: string;
+//   currency: string;
+//   destinationAddress: string;
+//   destinationName: string;
+//   generatedDate: string;
+//   sourceAddress: string;
+//   sourceName: string;
+//   amount: string;
+//   message: string;
+// };
 
-export interface ProtocolLogsReduxState {
-  logs: PaymentType[];
-}
+// export interface ProtocolLogsReduxState {
+//   logs: PaymentType[];
+// }
 
-// ProtocolLogs
-export type PaymentType = {
-  userUuid: string;
-  status: "SUCCESS" | "DENIED";
-  network: string;
-  currency: string;
-  destinationAddress: string;
-  destinationName: string;
-  generatedDate: string;
-  sourceAddress: string;
-  sourceName: string;
-  amount: string;
-  message: string;
-};
+// // ProtocolLogs
+// export type PaymentType = {
+//   userUuid: string;
+//   status: "SUCCESS" | "DENIED";
+//   network: string;
+//   currency: string;
+//   destinationAddress: string;
+//   destinationName: string;
+//   generatedDate: string;
+//   sourceAddress: string;
+//   sourceName: string;
+//   amount: string;
+//   message: string;
+// };
 
-export interface ProtocolLogsReduxState {
-  logs: PaymentType[];
-}
+// export interface ProtocolLogsReduxState {
+//   logs: PaymentType[];
+// }
