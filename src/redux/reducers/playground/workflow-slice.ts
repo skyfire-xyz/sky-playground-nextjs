@@ -73,7 +73,6 @@ export const workflowSlice = createSlice({
             payment: action.payload.data.payment,
           });
         }
-
         processFulfilled(state, action);
       })
       .addCase(postWorkflow.rejected, processError);
@@ -111,7 +110,10 @@ function processError(state: WorkflowSliceReduxState, action: any) {
     });
   }
 }
-function processFulfilled(state: WorkflowSliceReduxState) {
+function processFulfilled(
+  state: WorkflowSliceReduxState,
+  action: PayloadAction,
+) {
   state.status.requesting = false;
 }
 
