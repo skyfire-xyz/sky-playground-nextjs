@@ -36,7 +36,6 @@ export const workflowSlice = createSlice({
         type: payload.type || "chat",
         direction: payload.direction,
         textMessage: payload.textMessage,
-        data: payload.data,
         model: payload.model,
       });
     },
@@ -55,7 +54,6 @@ export const workflowSlice = createSlice({
        */
       .addCase(postWorkflow.pending, processPending)
       .addCase(postWorkflow.fulfilled, (state, action) => {
-        let data;
         let textMessages;
 
         if (action.payload.data?.choices) {
@@ -69,10 +67,8 @@ export const workflowSlice = createSlice({
 
         if (textMessages) {
           state.messages.push({
-            uuid: action.payload.uuid,
             type: action.payload.type as ChatMessageType["type"],
             model: action.meta.arg.model,
-            data: data,
             textMessage: textMessages[0].message.content,
             payment: action.payload.data.payment,
           });

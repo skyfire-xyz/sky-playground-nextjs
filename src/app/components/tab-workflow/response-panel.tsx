@@ -6,7 +6,6 @@ import { scrollToBottom } from "@/src/redux/utils/ui";
 import { AppDispatch } from "@/src/redux/store";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ChatMessageType } from "../common/types";
 import ChatError from "../common/chat-messages/chat-error";
 import ChatGeneral from "../common/chat-messages/chat-general";
 import ModelIcons from "../common/model-icons";
@@ -14,6 +13,7 @@ import BouncingDotsLoader from "../common/bouncing-loader";
 
 import { workflowStateSelector } from "@/src/redux/reducers/playground/workflow-slice";
 import usePlaygroundContentHeight from "@/src/lib/hooks/use-playground-content-height";
+import { ChatMessageType } from "@/src/redux/reducers/playground/types";
 
 interface ResponsePanelProps {
   children?: React.ReactNode;
@@ -52,6 +52,7 @@ export default function ResponsePanel({ children }: ResponsePanelProps) {
               return (
                 <ChatError
                   key={index}
+                  type={message.type}
                   direction={message.direction}
                   textMessage={message.textMessage}
                 />

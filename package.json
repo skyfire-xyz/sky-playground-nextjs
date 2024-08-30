@@ -8,11 +8,14 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --check --write src/",
-    "format-check": "prettier --check src/"
+    "format-check": "prettier --check src/",
+    "test": "jest --passWithNoTests",
+    "test:e2e": "playwright test",
+    "test:e2e-headed": "playwright test --headed"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.3",
-    "@skyfire-xyz/skyfire-sdk": "^0.6.0-dev.2",
+    "@skyfire-xyz/skyfire-sdk": "^0.6.0",
     "@types/lodash": "^4.17.7",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
@@ -38,6 +41,7 @@
     "react-use": "^17.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

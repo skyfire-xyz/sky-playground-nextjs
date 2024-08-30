@@ -1,6 +1,5 @@
-import axios from "axios";
 import { SkyfireClient } from "@skyfire-xyz/skyfire-sdk";
-import { API_BASE_URL } from "@/src/config/envs";
+import type { Claim, ClaimsResponse } from "@skyfire-xyz/skyfire-sdk";
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -48,32 +47,40 @@ export async function POST(request: Request) {
   if (!res) return Response.json({ message: "Not Found" }, { status: 400 });
 
   // Query Payment Information with referenceId
-  let paymentRes;
-  try {
-    const referenceId = res.headers["skyfire-payment-reference-id"];
+  const referenceId = res.headers["skyfire-payment-reference-id"];
+  if (referenceId) {
+    try {
+      const paymentRes =
+        await client.account.wallet.getClaimByReferenceId(referenceId);
+      if (paymentRes) {
+        // Return result with payment information
+        return Response.json({
+          ...res,
+          data: {
+            ...res.data,
+            payment: paymentRes,
+          },
+        });
+      }
+    } catch (err) {
+      // no-op
+    }
+  }
 
-    // TODO: Use SDK when endpoint is available.
-    paymentRes = await axios.get(
-      `${API_BASE_URL}/v1/wallet/claimByReferenceId/${referenceId}`,
-      {
-        headers: {
-          "skyfire-api-key": process.env.SKYFIRE_API_KEY,
-        },
-      },
-    );
+  // Return result without payment information
+  return Response.json(res);
+}
+
+async function getPaymentInformation(
+  client: SkyfireClient,
+  referenceId: string,
+): Promise<Claim | undefined> {
+  if (!referenceId) return;
+  try {
+    const paymentRes =
+      await client.account.wallet.getClaimByReferenceId(referenceId);
+    return paymentRes;
   } catch (err) {
     // no-op
   }
-
-  if (paymentRes) {
-    return Response.json({
-      ...res,
-      data: {
-        ...res.data,
-        payment: paymentRes.data,
-      },
-    });
-  }
-
-  return Response.json(res);
 }

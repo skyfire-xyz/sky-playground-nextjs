@@ -3,15 +3,11 @@ import Markdown from "react-markdown";
 import ModelIcons from "../../common/model-icons";
 import BouncingDotsLoader from "../../common/bouncing-loader";
 import { usdAmount } from "@/src/lib/utils";
+import { ChatMessageType } from "@/src/redux/reducers/playground/types";
 
-interface ChatGeneralProps {
-  direction: "left" | "right";
-  textMessage?: string;
+interface ChatGeneralProps extends ChatMessageType {
   contentImageUrl?: string;
   children?: React.ReactNode;
-  type?: string;
-  model?: string;
-  payment?: any;
   isProcessing: boolean;
 }
 
@@ -61,7 +57,7 @@ function ChatGeneral({
               <b>{model}</b>
             </p>
             <p className="flex items-center gap-1 text-green-500">
-              Spent: <b>{usdAmount(payment?.amount)}</b>
+              Spent: <b>{usdAmount(payment?.value)}</b>
             </p>
           </div>
         )}
