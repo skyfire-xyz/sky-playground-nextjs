@@ -64,7 +64,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Tell me a story",
     proxyType: "openrouter",
-    stream: true,
     services: "GPT-4o",
     model: "gpt-4o",
     prompt: "tell me a bedtime story",
@@ -72,7 +71,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Teach me how to best cook a steak",
     proxyType: "openrouter",
-    stream: true,
     services: "Gemini-Pro-1.5",
     model: "google/gemini-pro-1.5",
     prompt: "what's the best way to cook a steak",
@@ -80,7 +78,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Show my current balance",
     proxyType: "openrouter",
-    stream: true,
     services: "User Account + GPT-4o",
     model: "openai/chatgpt-4o-latest",
     apiCalls: [
@@ -108,7 +105,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Show my last 5 transactions",
     proxyType: "openrouter",
-    stream: true,
     services: "User Account + GPT-4o",
     model: "openai/chatgpt-4o-latest",
     apiCalls: [
@@ -136,7 +132,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Email me Twitter trends",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "Choose your Twitter Topic",
       userInputs: [
@@ -209,7 +204,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Analyze a company's income statements",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "Input a Company",
       userInputs: [
@@ -275,7 +269,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Find cocktail recipes with my at-home ingredients",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "List your Cocktail Ingredients",
       userInputs: [
@@ -334,7 +327,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Get a company's current stock price",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "Input a Company",
       userInputs: [
@@ -388,7 +380,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Email me a cookie recipe",
     proxyType: "openrouter",
-    stream: true,
     model: "perplexity/llama-3.1-sonar-huge-128k-online",
     services: "Perplexity + Email",
     inputModal: {
@@ -446,7 +437,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Find a popular date spot near me",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "Input a City",
       userInputs: [
@@ -523,7 +513,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Find LinkedIn jobs",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "Input a Company:",
       userInputs: [
@@ -581,7 +570,6 @@ export const availableTemplates: ModelTemplate[] = [
     title: "Find a dinner recipe with my at-home ingredients",
 
     proxyType: "openrouter",
-    stream: true,
 
     model: "openai/chatgpt-4o-latest",
 
@@ -624,7 +612,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Discover a new hobby",
     proxyType: "openrouter",
-    stream: true,
     model: "openai/chatgpt-4o-latest",
     services: "API-Ninja + GPT-4o",
     apiCalls: [
@@ -652,7 +639,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Shop Facebook Marketplace in SF",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "Search an Item",
       userInputs: [
@@ -693,7 +679,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Find upcoming live music events",
     proxyType: "openrouter",
-    stream: true,
     model: "openai/chatgpt-4o-latest",
     services: "Vetric + GPT-4o",
     apiCalls: [
@@ -721,7 +706,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Find an Instagram profile",
     proxyType: "openrouter",
-    stream: true,
     inputModal: {
       title: "Search for Someone",
       userInputs: [
@@ -760,7 +744,6 @@ export const availableTemplates: ModelTemplate[] = [
   {
     title: "Discover a famous quote",
     proxyType: "openrouter",
-    stream: true,
     model: "openai/chatgpt-4o-latest",
     services: "API-Ninja + GPT-4o",
     apiCalls: [
