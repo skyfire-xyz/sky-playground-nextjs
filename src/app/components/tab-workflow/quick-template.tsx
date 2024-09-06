@@ -45,6 +45,14 @@ export default function QuickTemplate({ onExecute }: QuickTemplateProps) {
       }),
     );
 
+    const userInput = templateTextInputs.map((input, index) => {
+      if (input && input.trim() !== "") {
+        return input;
+      } else {
+        return template.inputModal?.userInputs[index].defaultValue || "";
+      }
+    });
+
     dispatch(
       postWorkflow({
         chatType: "openrouter",
@@ -52,6 +60,7 @@ export default function QuickTemplate({ onExecute }: QuickTemplateProps) {
         model: template.model,
         apiCalls: template.apiCalls,
         messages: template.messages,
+        userInput,
       }),
     );
   };

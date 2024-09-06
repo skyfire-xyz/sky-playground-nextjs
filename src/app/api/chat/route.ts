@@ -1,3 +1,4 @@
+import { SKYFIRE_API_KEY, SKYFIRE_ENV } from "@/src/config/env";
 import { SkyfireClient } from "@skyfire-xyz/skyfire-sdk";
 
 export async function POST(request: Request) {
@@ -5,14 +6,14 @@ export async function POST(request: Request) {
 
   const { messages, model } = req;
 
-  if (!process.env.SKYFIRE_API_KEY) {
+  if (!SKYFIRE_API_KEY) {
     return Response.json({ message: "Missing API Key" }, { status: 401 });
   }
 
   // Initialize Skyfire Client
   const client = new SkyfireClient({
-    apiKey: process.env.SKYFIRE_API_KEY,
-    environment: process.env.SKYFIRE_APP_ENV || "production",
+    apiKey: SKYFIRE_API_KEY,
+    environment: SKYFIRE_ENV,
   });
 
   let res;
