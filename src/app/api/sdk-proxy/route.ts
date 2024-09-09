@@ -1,5 +1,5 @@
 import { SkyfireClient } from "@skyfire-xyz/skyfire-sdk";
-import { get } from "lodash";
+import { get, invoke } from "lodash";
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -20,19 +20,14 @@ export async function POST(request: Request) {
 
   let res;
   try {
-    const apiCall = get(client, apiPath);
-    res = await apiCall(payload);
-    console.log(res);
+    // e.g. client.account.wallet.getWalletBalanceForUser
+    res = await invoke(client, apiPath, payload);
   } catch (err) {
-    console.log(err);
-    if (err instanceof Error) {
-      const error = err as any;
-      return Response.json(
-        { message: error.body || error.message },
-        { status: error.code },
-      );
-    }
-    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+    const error = err as any;
+    return Response.json(
+      { message: `Call to ${apiPath} | Error: ${error.body || error.message}` },
+      { status: error.code },
+    );
   }
 
   if (!res) return Response.json({ message: "Not Found" }, { status: 400 });

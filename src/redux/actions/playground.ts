@@ -1,10 +1,14 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { GetThunkAPI, createAsyncThunk } from "@reduxjs/toolkit";
+import { EventSourceParserStream } from "eventsource-parser/stream";
 import axios from "axios";
 
 import { APICallConfig, ModelTemplate } from "@/src/config/models";
 import { RootState } from "../store";
 import { createAsyncThunkWithReject } from "../utils/async-thunk-withreject";
+import { chatActions } from "@/src/redux/reducers/playground/chat-slice";
+import { workflowActions } from "@/src/redux/reducers/playground/workflow-slice";
 import { cloneDeep, get } from "lodash";
+import { setShouldScrollToBottom } from "../reducers/playground/ui-effect-slice";
 
 interface PostChatProps {
   chatType: string;
@@ -25,17 +29,22 @@ export const postWorkflow = createAsyncThunkWithReject<any, PostChatProps>(
   callProxyAPI,
 );
 
+export const postChatWithStream = createAsyncThunk<any, PostChatProps>(
+  "playground/postChatWithStream",
+  callProxyAPIWithStream("chat"),
+);
+
+export const postWorkflowWithStream = createAsyncThunk<any, PostChatProps>(
+  "playground/postWorkflowWithStream",
+  callProxyAPIWithStream("workflow"),
+);
+
 export const getWalletBalance = createAsyncThunk<any>(
   "playground/getWalletBalance",
   async () => {
-    const res = await axios.get(`/api/balance`);
-
-    // TODO: Attempt to use SDK proxy
-    // const res = await axios.post(`/api/sdk-proxy`, {
-    //   apiPath: "account.wallet.getWalletBalanceForUser",
-    //   payload: undefined,
-    // });
-
+    const res = await axios.post(`/api/sdk-proxy`, {
+      apiPath: "account.wallet.getWalletBalanceForUser",
+    });
     return res.data;
   },
   {
@@ -52,7 +61,9 @@ export const getWalletBalance = createAsyncThunk<any>(
 export const refetchBalance = createAsyncThunkWithReject<any>(
   "playground/getWalletBalance",
   async () => {
-    const res = await axios.get(`/api/balance`);
+    const res = await axios.post(`/api/sdk-proxy`, {
+      apiPath: "account.wallet.getWalletBalanceForUser",
+    });
     return res.data;
   },
 );
@@ -70,7 +81,7 @@ async function callProxyAPI(props: PostChatProps) {
     };
   }
 
-  const res = await axios.post(`/api/chat`, {
+  const res = await axios.post(`/api/non-stream-chat`, {
     chatType,
     model,
     messages: messagesWithData,
@@ -81,6 +92,158 @@ async function callProxyAPI(props: PostChatProps) {
     prompt: message,
     type: chatType,
   };
+}
+
+function callProxyAPIWithStream(playgroundType: "workflow" | "chat") {
+  return async function (props: PostChatProps, { dispatch }: GetThunkAPI<any>) {
+    const sseHandlers = new Promise(async (resolve, reject) => {
+      const actions =
+        playgroundType === "workflow" ? workflowActions : chatActions;
+      const { addMessage, incrementMessage, setBotStatus } = actions;
+      const { chatType, model } = props;
+
+      let messagesWithData;
+      try {
+        messagesWithData = await makeMessagesWithData(props);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          if (err.message.includes("402")) {
+            return reject(
+              "It looks like your balance is too low to complete this prompt.",
+            );
+          } else if (
+            err.message.includes("404") ||
+            err.message.includes("400")
+          ) {
+            return reject(
+              "It seems we couldn't find any results for your input. Please try again with different input.",
+            );
+          }
+          return reject(
+            "Something went wrong while processing the messages. Please try again.",
+          );
+        }
+        return {
+          type: chatType,
+          message: "Error in processing messages",
+        };
+      }
+
+      // Initiate the first call to connect to SSE API
+      const apiResponse = await fetch(`/api/stream-chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/event-stream",
+        },
+        body: JSON.stringify({
+          model,
+          chatType,
+          messages: messagesWithData,
+        }),
+      });
+
+      if (!apiResponse.ok) {
+        if (apiResponse.status === 402) {
+          return reject(
+            "It looks like your balance is too low to complete this prompt.",
+          );
+        } else if (apiResponse.status === 404 || apiResponse.status === 400) {
+          return reject(
+            "It seems we couldn't find any results for your input. Please try again with different input.",
+          );
+        }
+        return reject(
+          "Something went wrong while processing the messages. Please try again.",
+        );
+      }
+
+      if (!apiResponse.body) return;
+
+      dispatch(
+        setBotStatus({
+          requesting: true,
+        }),
+      );
+
+      // To decode incoming data as a string
+      const reader = apiResponse.body
+        .pipeThrough(new TextDecoderStream())
+        .pipeThrough(new EventSourceParserStream())
+        .getReader();
+
+      dispatch(
+        addMessage({
+          type: chatType,
+          model: model,
+          direction: "left",
+          textMessage: "",
+        }),
+      );
+      dispatch(
+        setBotStatus({
+          requesting: false,
+          processing: true,
+        }),
+      );
+
+      // Handle incoming stream data
+      while (true) {
+        const test = await reader.read();
+        const { value, done } = test;
+
+        if (done) {
+          break;
+        }
+        if (value) {
+          if (value.data && value.data === "[DONE]") {
+            break;
+          } else if (value.data && value.data !== "[DONE]") {
+            try {
+              const data = JSON.parse(value.data);
+              dispatch(
+                incrementMessage({
+                  type: chatType,
+                  direction: "left",
+                  textMessage: data.choices[0].delta.content,
+                }),
+              );
+              dispatch(setShouldScrollToBottom(true));
+            } catch (err) {}
+          }
+        }
+      }
+
+      // Request payments
+      const referenceId = apiResponse.headers.get(
+        "skyfire-payment-reference-id",
+      );
+      const payment = await getClaimByReferenceID(referenceId);
+
+      resolve({
+        payment,
+      });
+    });
+    return sseHandlers;
+  };
+}
+
+async function getClaimByReferenceID(referenceId: string | null) {
+  if (referenceId) {
+    try {
+      const res = await axios.post(`/api/sdk-proxy`, {
+        apiPath: "account.wallet.getClaimByReferenceId",
+        payload: referenceId,
+      });
+
+      return {
+        amount: res.data.value + " UDSC" || "N/A",
+        referenceId: res.data?.referenceId || "",
+      };
+    } catch {
+      return false;
+    }
+  }
+  return false;
 }
 
 async function makeMessagesWithData({

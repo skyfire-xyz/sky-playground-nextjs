@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 
 import { Button, TextInput } from "flowbite-react";
 
-import { postChat } from "@/src/redux/actions/playground";
+import { postChat, postChatWithStream } from "@/src/redux/actions/playground";
 import {
   addMessage,
   chatStateSelector,
@@ -54,7 +54,7 @@ export default function ChatPane() {
       // Regular Chat Request
       ///////////////////////////////////////////////////////////
       dispatch(
-        postChat({
+        postChatWithStream({
           chatType: selectedModel.proxyType,
           message: inputText,
           model: selectedModel.model,
