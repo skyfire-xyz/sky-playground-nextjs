@@ -42,7 +42,9 @@ export const postWorkflowWithStream = createAsyncThunk<any, PostChatProps>(
 export const getWalletBalance = createAsyncThunk<any>(
   "playground/getWalletBalance",
   async () => {
-    const res = await axios.get(`/api/balance`);
+    const res = await axios.post(`/api/sdk-proxy`, {
+      apiPath: "account.wallet.getWalletBalanceForUser",
+    });
     return res.data;
   },
   {
@@ -59,7 +61,9 @@ export const getWalletBalance = createAsyncThunk<any>(
 export const refetchBalance = createAsyncThunkWithReject<any>(
   "playground/getWalletBalance",
   async () => {
-    const res = await axios.get(`/api/balance`);
+    const res = await axios.post(`/api/sdk-proxy`, {
+      apiPath: "account.wallet.getWalletBalanceForUser",
+    });
     return res.data;
   },
 );
@@ -77,7 +81,7 @@ async function callProxyAPI(props: PostChatProps) {
     };
   }
 
-  const res = await axios.post(`/api/chat`, {
+  const res = await axios.post(`/api/non-stream-chat`, {
     chatType,
     model,
     messages: messagesWithData,
@@ -126,7 +130,7 @@ function callProxyAPIWithStream(playgroundType: "workflow" | "chat") {
       }
 
       // Initiate the first call to connect to SSE API
-      const apiResponse = await fetch(`/api/stream`, {
+      const apiResponse = await fetch(`/api/stream-chat`, {
         method: "POST",
         headers: {
           "Content-Type": "text/event-stream",
@@ -226,7 +230,11 @@ function callProxyAPIWithStream(playgroundType: "workflow" | "chat") {
 async function getClaimByReferenceID(referenceId: string | null) {
   if (referenceId) {
     try {
-      const res = await axios.get(`/api/claim?referenceId=${referenceId}`);
+      const res = await axios.post(`/api/sdk-proxy`, {
+        apiPath: "account.wallet.getClaimByReferenceId",
+        payload: referenceId,
+      });
+
       return {
         amount: res.data.value + " UDSC" || "N/A",
         referenceId: res.data?.referenceId || "",

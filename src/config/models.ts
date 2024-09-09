@@ -7,8 +7,9 @@ export type Model = {
 
 export type APICallConfig = {
   /** path of the proxy call */
-  path: string;
-  method: "GET" | "POST";
+  sdkPath?: string;
+  path?: string;
+  method?: "GET" | "POST";
   /**
    * object payload of the data for put requests. Templates are supported in the payload.
    */
@@ -82,8 +83,7 @@ export const availableTemplates: ModelTemplate[] = [
     model: "openai/chatgpt-4o-latest",
     apiCalls: [
       {
-        path: "v1/wallet/balance",
-        method: "GET",
+        sdkPath: "account.wallet.getWalletBalanceForUser",
       },
     ],
     messages: [
@@ -109,8 +109,8 @@ export const availableTemplates: ModelTemplate[] = [
     model: "openai/chatgpt-4o-latest",
     apiCalls: [
       {
-        path: "v1/wallet/claims?size=5",
-        method: "GET",
+        sdkPath: "account.wallet.getClaimsForUser",
+        payload: 5,
       },
     ],
     messages: [
@@ -153,12 +153,11 @@ export const availableTemplates: ModelTemplate[] = [
       "Enter a Twitter topic and an email with the top tweets is sent to you.",
     apiCalls: [
       {
-        path: "v1/receivers/vetric/twitter/top?query={{user_input_0}}",
-        method: "GET",
+        sdkPath: "vetric.twitterTop",
+        payload: "{{user_input_0}}",
       },
       {
-        path: "proxy/openrouter/v1/chat/completions",
-        method: "POST",
+        sdkPath: "chat.createOpenRouterChatCompletion",
         payload: {
           model: "openai/chatgpt-4o-latest",
           messages: [
@@ -172,8 +171,7 @@ export const availableTemplates: ModelTemplate[] = [
         dataPath: "choices[0].message.content",
       },
       {
-        path: "v1/receivers/toolkit/send-email",
-        method: "POST",
+        sdkPath: "toolkit.sendEmail",
         payload: {
           emailData: "{{api_1}}",
           recipientEmail: "{{user_input_1}}",
@@ -227,8 +225,7 @@ export const availableTemplates: ModelTemplate[] = [
     services: "Financial Datasets AI + GPT-4o",
     apiCalls: [
       {
-        path: "proxy/openrouter/v1/chat/completions",
-        method: "POST",
+        sdkPath: "chat.createOpenRouterChatCompletion",
         payload: {
           messages: [
             {
@@ -247,6 +244,14 @@ export const availableTemplates: ModelTemplate[] = [
       {
         path: "proxy/financial-datasets-ai/financials/income-statements?ticker={{api_0}}&period=annual&limit={{user_input_1}}",
         method: "GET",
+
+        // Not Supporting
+        // sdkPath: "financialDatasetsAI.incomeStatements",
+        // payload: {
+        //   ticker: "{{api_0}}",
+        //   period: "annual",
+        //   limit: "{{user_input_1}}",
+        // },
       },
     ],
     messages: [
@@ -285,8 +290,7 @@ export const availableTemplates: ModelTemplate[] = [
       "Enter a list of ingredients and view cocktail recipes containing all ingredients.",
     apiCalls: [
       {
-        path: "proxy/openrouter/v1/chat/completions",
-        method: "POST",
+        sdkPath: "chat.createOpenRouterChatCompletion",
         payload: {
           model: "openai/chatgpt-4o-latest",
           messages: [
@@ -304,6 +308,7 @@ export const availableTemplates: ModelTemplate[] = [
         dataPath: "choices[0].message.content",
       },
       {
+        // Not suppored by SDK
         path: "proxy/api-ninja/v1/cocktail?ingredients={{api_0}}",
         method: "GET",
       },
@@ -342,8 +347,7 @@ export const availableTemplates: ModelTemplate[] = [
     description: "Enter a company to check its current stock price.",
     apiCalls: [
       {
-        path: "proxy/openrouter/v1/chat/completions",
-        method: "POST",
+        sdkPath: "chat.createOpenRouterChatCompletion",
         payload: {
           model: "openai/chatgpt-4o-latest",
           messages: [
@@ -357,8 +361,8 @@ export const availableTemplates: ModelTemplate[] = [
         dataPath: "choices[0].message.content",
       },
       {
-        path: "proxy/api-ninja/v1/stockprice?ticker={{api_0}}",
-        method: "GET",
+        sdkPath: "apiNinja.stockPrice",
+        payload: "{{api_0}}",
       },
     ],
     messages: [
@@ -394,8 +398,7 @@ export const availableTemplates: ModelTemplate[] = [
     },
     apiCalls: [
       {
-        path: "proxy/openrouter/v1/chat/completions",
-        method: "POST",
+        sdkPath: "chat.createOpenRouterChatCompletion",
         payload: {
           model: "openai/chatgpt-4o-latest",
           messages: [
@@ -409,8 +412,7 @@ export const availableTemplates: ModelTemplate[] = [
         dataPath: "choices[0].message.content",
       },
       {
-        path: "v1/receivers/toolkit/send-email",
-        method: "POST",
+        sdkPath: "toolkit.sendEmail",
         payload: {
           recipientEmail: "{{user_input_0}}",
           emailData: "{{api_0}}",
@@ -456,13 +458,9 @@ export const availableTemplates: ModelTemplate[] = [
 
     apiCalls: [
       {
-        path: "proxy/openrouter/v1/chat/completions",
-
-        method: "POST",
-
+        sdkPath: "chat.createOpenRouterChatCompletion",
         payload: {
           model: "openai/chatgpt-4o-latest",
-
           messages: [
             {
               content:
@@ -470,7 +468,6 @@ export const availableTemplates: ModelTemplate[] = [
 
               role: "system",
             },
-
             {
               content: "City: {{user_input_0}}",
 
@@ -478,14 +475,13 @@ export const availableTemplates: ModelTemplate[] = [
             },
           ],
         },
-
         dataPath: "choices[0].message.content",
       },
-
       {
-        path: "v1/receivers/vetric/instagram/location-map?coordinates={{api_0}}",
-
-        method: "GET",
+        sdkPath: "vetric.instagramLocationMap",
+        payload: {
+          coordinates: "{{api_0}}",
+        },
       },
     ],
 
@@ -528,8 +524,7 @@ export const availableTemplates: ModelTemplate[] = [
     description: "Enter a company and view its available jobs on LinkedIn.",
     apiCalls: [
       {
-        path: "proxy/openrouter/v1/chat/completions",
-        method: "POST",
+        sdkPath: "chat.createOpenRouterChatCompletion",
         payload: {
           messages: [
             {
@@ -546,8 +541,8 @@ export const availableTemplates: ModelTemplate[] = [
         dataPath: "choices[0].message.content",
       },
       {
-        path: "v1/receivers/vetric/linkedin/job-search?query={{api_0}}",
-        method: "GET",
+        sdkPath: "vetric.linkedInJobSearch",
+        payload: "{{api_0}}",
       },
     ],
     messages: [
@@ -568,13 +563,9 @@ export const availableTemplates: ModelTemplate[] = [
   },
   {
     title: "Find a dinner recipe with my at-home ingredients",
-
     proxyType: "openrouter",
-
     model: "openai/chatgpt-4o-latest",
-
     services: "GPT-4o",
-
     inputModal: {
       title: "List your Dinner Ingredients",
       userInputs: [
@@ -585,10 +576,8 @@ export const availableTemplates: ModelTemplate[] = [
         },
       ],
     },
-
     description:
       "Enter a list of ingredients and view a dinner recipe containing all ingredients.",
-
     messages: [
       {
         content:
@@ -596,7 +585,6 @@ export const availableTemplates: ModelTemplate[] = [
 
         role: "system",
       },
-
       {
         content:
           "What can I make with the following ingredients: {{user_input_0}}",
@@ -616,6 +604,7 @@ export const availableTemplates: ModelTemplate[] = [
     services: "API-Ninja + GPT-4o",
     apiCalls: [
       {
+        // Not suppored by SDK
         path: "proxy/api-ninja/v1/hobbies?category=general",
         method: "GET",
       },
@@ -653,11 +642,10 @@ export const availableTemplates: ModelTemplate[] = [
     services: "Vetric + GPT-4o",
     description:
       "Enter an item and view listings on Facebook Marketplace near San Francisco area.",
-
     apiCalls: [
       {
-        path: "v1/receivers/vetric/facebook/marketplace-search?query={{user_input_0}}",
-        method: "GET",
+        sdkPath: "vetric.facebookMarketplaceSearch",
+        payload: "{{user_input_0}}",
       },
     ],
     messages: [
@@ -683,8 +671,8 @@ export const availableTemplates: ModelTemplate[] = [
     services: "Vetric + GPT-4o",
     apiCalls: [
       {
-        path: "v1/receivers/vetric/facebook/event-search?query=music",
-        method: "GET",
+        sdkPath: "vetric.facebookEventSearch",
+        payload: "music",
       },
     ],
     messages: [
@@ -721,8 +709,8 @@ export const availableTemplates: ModelTemplate[] = [
     services: "Vetric + GPT-4o",
     apiCalls: [
       {
-        path: "v1/receivers/vetric/instagram/people-search?query={{user_input_0}}",
-        method: "GET",
+        sdkPath: "vetric.instagramPeopleSearch",
+        payload: "{{user_input_0}}",
       },
     ],
     messages: [
@@ -748,6 +736,7 @@ export const availableTemplates: ModelTemplate[] = [
     services: "API-Ninja + GPT-4o",
     apiCalls: [
       {
+        // Not suppored by SDK
         path: "proxy/api-ninja/v1/quotes?category=",
         method: "GET",
       },
