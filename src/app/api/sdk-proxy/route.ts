@@ -20,6 +20,7 @@ export async function POST(request: Request) {
 
   let res;
   try {
+    // TODO: Cannot make the function working this way.
     const apiCall = get(client, apiPath);
     res = await apiCall(payload);
     console.log(res);

@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { ChatMessageType, WorkflowSliceReduxState } from "./types";
 import { toast } from "react-toastify";
-import { postWorkflow } from "../../actions/playground";
+import { postWorkflow, postWorkflowWithStream } from "../../actions/playground";
 
 const initialState: WorkflowSliceReduxState = {
   messages: [],
@@ -74,6 +74,27 @@ export const workflowSlice = createSlice({
           });
         }
         processFulfilled(state, action);
+      })
+      .addCase(postWorkflowWithStream.pending, processPending)
+      .addCase(postWorkflowWithStream.fulfilled, (state, action) => {
+        state.status.processing = false;
+
+        if (state.messages[state.messages.length - 1]) {
+          state.messages[state.messages.length - 1].payment =
+            action.payload.payment;
+        }
+      })
+      .addCase(postWorkflowWithStream.rejected, (state, action) => {
+        state.messages.push({
+          type: "error",
+          textMessage:
+            action.error.message ||
+            "Sorry, something went wrong when interacting with the AI. Please try again.",
+        });
+        state.status = {
+          requesting: false,
+          processing: false,
+        };
       })
       .addCase(postWorkflow.rejected, processError);
   },

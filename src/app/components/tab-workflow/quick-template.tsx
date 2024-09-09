@@ -1,5 +1,8 @@
 import { availableTemplates, ModelTemplate } from "@/src/config/models";
-import { postWorkflow } from "@/src/redux/actions/playground";
+import {
+  postWorkflow,
+  postWorkflowWithStream,
+} from "@/src/redux/actions/playground";
 import { Button, Card, Modal, TextInput } from "flowbite-react";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,8 +56,19 @@ export default function QuickTemplate({ onExecute }: QuickTemplateProps) {
       }
     });
 
+    // dispatch(
+    //   postWorkflow({
+    //     chatType: "openrouter",
+    //     message: template.prompt,
+    //     model: template.model,
+    //     apiCalls: template.apiCalls,
+    //     messages: template.messages,
+    //     userInput,
+    //   }),
+    // );
+
     dispatch(
-      postWorkflow({
+      postWorkflowWithStream({
         chatType: "openrouter",
         message: template.prompt,
         model: template.model,

@@ -1,7 +1,7 @@
 import { availableModels } from "@/src/config/models";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { postChat } from "../../actions/playground";
+import { postChat, postChatWithStream } from "../../actions/playground";
 import { ChatMessageType, ChatSliceReduxState } from "./types";
 
 const initialState: ChatSliceReduxState = {
@@ -80,7 +80,28 @@ export const chatSlice = createSlice({
 
         processFulfilled(state, action);
       })
-      .addCase(postChat.rejected, processError);
+      .addCase(postChat.rejected, processError)
+      .addCase(postChatWithStream.pending, processPending)
+      .addCase(postChatWithStream.fulfilled, (state, action) => {
+        state.status.processing = false;
+
+        if (state.messages[state.messages.length - 1]) {
+          state.messages[state.messages.length - 1].payment =
+            action.payload.payment;
+        }
+      })
+      .addCase(postChatWithStream.rejected, (state, action) => {
+        state.messages.push({
+          type: "error",
+          textMessage:
+            action.error.message ||
+            "Sorry, something went wrong when interacting with the AI. Please try again.",
+        });
+        state.status = {
+          requesting: false,
+          processing: false,
+        };
+      });
   },
 });
 
