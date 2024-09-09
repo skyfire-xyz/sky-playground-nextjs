@@ -4,3 +4,4 @@ export const SKYFIRE_ENDPOINT_URL =
   SKYFIRE_ENV === "production"
     ? "https://api.skyfire.xyz"
     : "https://api-qa.skyfire.xyz";
+export const SKYFIRE_SDK_BASELINE_URL = process.env.SKYFIRE_SDK_BASELINE_URL;

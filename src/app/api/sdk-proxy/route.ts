@@ -1,3 +1,8 @@
+import {
+  SKYFIRE_API_KEY,
+  SKYFIRE_ENV,
+  SKYFIRE_SDK_BASELINE_URL,
+} from "@/src/config/env";
 import { SkyfireClient } from "@skyfire-xyz/skyfire-sdk";
 import { get, invoke } from "lodash";
 
@@ -12,8 +17,9 @@ export async function POST(request: Request) {
 
   // Initialize Skyfire Client
   const client = new SkyfireClient({
-    apiKey: process.env.SKYFIRE_API_KEY,
-    environment: process.env.SKYFIRE_APP_ENV || "production",
+    apiKey: SKYFIRE_API_KEY,
+    environment: SKYFIRE_ENV,
+    baseUrl: SKYFIRE_SDK_BASELINE_URL,
   });
 
   client.account;

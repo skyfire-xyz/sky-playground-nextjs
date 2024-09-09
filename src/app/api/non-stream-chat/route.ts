@@ -1,4 +1,8 @@
-import { SKYFIRE_API_KEY, SKYFIRE_ENV } from "@/src/config/env";
+import {
+  SKYFIRE_API_KEY,
+  SKYFIRE_ENV,
+  SKYFIRE_SDK_BASELINE_URL,
+} from "@/src/config/env";
 import { SkyfireClient } from "@skyfire-xyz/skyfire-sdk";
 
 export async function POST(request: Request) {
@@ -14,6 +18,7 @@ export async function POST(request: Request) {
   const client = new SkyfireClient({
     apiKey: SKYFIRE_API_KEY,
     environment: SKYFIRE_ENV,
+    baseUrl: SKYFIRE_SDK_BASELINE_URL,
   });
 
   let res;
