@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 
-const useSpeechRecognition = () => {
+export interface SpeechRecognitionProps {
+  text: string;
+  isListening: boolean;
+  startListening: () => void;
+  stopListening: () => void;
+  hasRecognitionSupport: boolean;
+}
+
+const useSpeechRecognition = (): SpeechRecognitionProps => {
   const [text, setText] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [hasRecognitionSupport, setHasRecognitionSupport] = useState(false);
@@ -27,18 +35,18 @@ const useSpeechRecognition = () => {
     if (!speechRecognition) return;
 
     speechRecognition.onresult = (event: SpeechRecognitionEvent) => {
-      console.log("Speech recognition event:", event);
+      // console.log("Speech recognition event:", event);
       const transcript = event.results[0][0].transcript;
       setText(transcript);
     };
 
     speechRecognition.onspeechend = () => {
-      console.log("Speech has stopped being detected");
+      // console.log("Speech has stopped being detected");
       stopListening();
     };
 
     speechRecognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error("Speech recognition error", event.error);
+      // console.error("Speech recognition error", event.error);
       stopListening();
     };
   }, [speechRecognition]);

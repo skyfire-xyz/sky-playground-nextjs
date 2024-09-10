@@ -15,22 +15,15 @@ import ChatMenu from "./menu";
 import ResponsePanel from "./response-panel";
 import { AppDispatch } from "@/src/redux/store";
 import useIsMobile from "@/src/lib/hooks/use-ismobile";
-import useSpeechRecognition from "@/src/lib/hooks/use-speech-recognition";
-import { FaCircleStop } from "react-icons/fa6";
-import { FaMicrophone } from "react-icons/fa";
-import SoundWave from "../common/soundwave";
-import { set } from "lodash";
+import useSpeechRecognition from "@/src/components/ui/speech-recognition/use-speech-recognition";
+import RecordingIndicator from "@/src/components/ui/speech-recognition/recording-indicator";
+import { RecordButton } from "@/src/components/ui/speech-recognition/record-button";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export default function ChatPane() {
-  const {
-    text,
-    isListening,
-    startListening,
-    stopListening,
-    hasRecognitionSupport,
-  } = useSpeechRecognition();
+  const speechRecognitionProps = useSpeechRecognition();
+  const { text, isListening } = speechRecognitionProps;
 
   const isMobile = useIsMobile();
   const dispatch = useDispatch<AppDispatch>();
@@ -114,7 +107,7 @@ export default function ChatPane() {
             </div>
           )}
           <div className="relative w-full">
-            {isListening && <SoundWave />}
+            {isListening && <RecordingIndicator />}
             <div
               data-testid="right-icon"
               className="absolute inset-y-0 right-0 z-40 flex items-center gap-3 pr-3"
@@ -126,19 +119,10 @@ export default function ChatPane() {
                   handleEnter({ key: "Enter" });
                 }}
               />
-              <div>
-                {isListening ? (
-                  <FaCircleStop
-                    className="cursor-pointer"
-                    onClick={stopListening}
-                  />
-                ) : (
-                  <FaMicrophone
-                    className={`cursor-pointer ${status.requesting || status.processing ? "opacity-30" : ""}`}
-                    onClick={startListening}
-                  />
-                )}
-              </div>
+              <RecordButton
+                {...speechRecognitionProps}
+                disabled={status.requesting || status.processing}
+              />
             </div>
             <TextInput
               className="w-full rounded-xl bg-[#f7f9fa]"

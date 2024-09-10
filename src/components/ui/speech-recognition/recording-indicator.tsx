@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export default function SoundWave() {
+export default function RecordingIndicator() {
   const waveRef = useRef<HTMLDivElement>(null);
   const [bars, setBars] = useState<number[]>([]);
 
@@ -39,9 +39,9 @@ export default function SoundWave() {
         {bars.map((i) => (
           <div
             key={i}
-            className={`bar mx-[0.5px] h-[10px] w-[0.33%] animate-wave-lg bg-blue-900
-              ${i < bars.length * 0.04375 || i >= bars.length * 0.95625 ? "animate-wave-md" : ""}
-              ${i < bars.length * 0.01875 || i >= bars.length * 0.98125 ? "animate-wave-sm" : ""}`}
+            className={`bar mx-[0.5px] h-[10px] w-[0.33%] animate-wave-lg bg-[#FF6815]
+                ${i < bars.length * 0.04375 || i >= bars.length * 0.95625 ? "animate-wave-md" : ""}
+                ${i < bars.length * 0.01875 || i >= bars.length * 0.98125 ? "animate-wave-sm" : ""}`}
           />
         ))}
       </div>
