@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
 import { Button, TextInput } from "flowbite-react";
 
@@ -15,10 +15,23 @@ import ChatMenu from "./menu";
 import ResponsePanel from "./response-panel";
 import { AppDispatch } from "@/src/redux/store";
 import useIsMobile from "@/src/lib/hooks/use-ismobile";
+import useSpeechRecognition from "@/src/lib/hooks/use-speech-recognition";
+import { FaCircleStop } from "react-icons/fa6";
+import { FaMicrophone } from "react-icons/fa";
+import SoundWave from "../common/soundwave";
+import { set } from "lodash";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export default function ChatPane() {
+  const {
+    text,
+    isListening,
+    startListening,
+    stopListening,
+    hasRecognitionSupport,
+  } = useSpeechRecognition();
+
   const isMobile = useIsMobile();
   const dispatch = useDispatch<AppDispatch>();
   const { selectedModel, status } = useSelector(chatStateSelector);
@@ -26,18 +39,34 @@ export default function ChatPane() {
   const [inputText, setInputText] = useState("");
   const chatPaneRef = useRef<HTMLDivElement>(null);
 
+  const processing = status.requesting || status.processing || isListening;
+
+  useEffect(() => {
+    if (isListening) {
+    } else {
+      setInputText(text);
+      if (text) {
+        setTimeout(() => {
+          handleEnter({ key: "Enter" }, text);
+        }, 500);
+      }
+    }
+  }, [isListening, text]);
+
   // Process User Input
   const handleEnter = async (
     ev:
       | React.KeyboardEvent<HTMLInputElement>
       | { key: string; preventDefault?: () => void },
+    speachText?: string,
   ) => {
     if (ev.key === "Enter") {
+      const textMessage = speachText || inputText;
       dispatch(
         addMessage({
           type: "chat",
           direction: "right",
-          textMessage: inputText,
+          textMessage,
         }),
       );
 
@@ -56,7 +85,7 @@ export default function ChatPane() {
       dispatch(
         postChatWithStream({
           chatType: selectedModel.proxyType,
-          message: inputText,
+          message: textMessage,
           model: selectedModel.model,
         }),
       );
@@ -85,24 +114,36 @@ export default function ChatPane() {
             </div>
           )}
           <div className="relative w-full">
+            {isListening && <SoundWave />}
             <div
               data-testid="right-icon"
-              className="absolute inset-y-0 right-0 z-40 flex items-center pr-3"
+              className="absolute inset-y-0 right-0 z-40 flex items-center gap-3 pr-3"
             >
-              <Button
-                size="sm"
-                disabled={status.requesting || status.processing}
+              <IoMdSend
+                className={`cursor-pointer ${processing ? "opacity-30" : ""}`}
                 onClick={() => {
+                  if (processing) return;
                   handleEnter({ key: "Enter" });
                 }}
-              >
-                <IoMdSend />
-              </Button>
+              />
+              <div>
+                {isListening ? (
+                  <FaCircleStop
+                    className="cursor-pointer"
+                    onClick={stopListening}
+                  />
+                ) : (
+                  <FaMicrophone
+                    className={`cursor-pointer ${status.requesting || status.processing ? "opacity-30" : ""}`}
+                    onClick={startListening}
+                  />
+                )}
+              </div>
             </div>
             <TextInput
               className="w-full rounded-xl bg-[#f7f9fa]"
               value={inputText}
-              disabled={status.requesting || status.processing}
+              disabled={processing}
               onChange={(ev) => {
                 setInputText(ev?.target?.value);
               }}

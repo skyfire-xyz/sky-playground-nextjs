@@ -16,6 +16,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.3",
     "@skyfire-xyz/skyfire-sdk": "^0.7.0",
+    "@types/dom-speech-recognition": "^0.0.4",
     "@types/lodash": "^4.17.7",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
