@@ -39,7 +39,7 @@ export default function SoundWave() {
         {bars.map((i) => (
           <div
             key={i}
-            className={`bar animate-wave-lg mx-[0.5px] h-[10px] w-[0.33%] bg-blue-900
+            className={`bar mx-[0.5px] h-[10px] w-[0.33%] animate-wave-lg bg-blue-900
               ${i < bars.length * 0.04375 || i >= bars.length * 0.95625 ? "animate-wave-md" : ""}
               ${i < bars.length * 0.01875 || i >= bars.length * 0.98125 ? "animate-wave-sm" : ""}`}
           />
