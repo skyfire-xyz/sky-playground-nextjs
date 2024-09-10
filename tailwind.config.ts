@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import flowbite from "flowbite-react/tailwind";
+import speechRecognition from "./src/components/ui/speech-recognition/tw-configs";
 
 const config: Config = {
   content: [
@@ -12,6 +13,9 @@ const config: Config = {
   theme: {
     fontFamily: {
       instrument: ["var(--font-instrument)"],
+    },
+    extend: {
+      ...speechRecognition,
     },
   },
 };
